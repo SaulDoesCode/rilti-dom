@@ -280,21 +280,26 @@
 
   const defaultConnector = 'appendChild'
 
-  const render = (node, host = 'body', connector = defaultConnector) => dom(host)
-  .then(
-    h => {
-      if (!isMounted(h) && connector !== defaultConnector) {
-        once.mount(h, () => {
+  const render = (node, host = 'body', connector = defaultConnector) => {
+    dom(host)
+    .then(
+      h => {
+        if (!isMounted(h) && connector !== defaultConnector) {
+          once.mount(h, () => {
+            if (!isNode(node)) node = vpend(node)
+            h[connector](node)
+            MNT(node)
+          })
+        } else {
+          if (!isNode(node)) node = vpend(node)
           h[connector](node)
           MNT(node)
-        })
-      } else {
-        h[connector](node)
-        MNT(node)
-      }
-    },
-    errs => err('render fault: ', errs)
-  )
+        }
+      },
+      errs => err('render fault: ', errs)
+    )
+    return node
+  }
 
   const create = (tag, options, ...children) => {
     const el = isNode(tag) ? tag : doc.createElement(tag)
@@ -385,9 +390,7 @@
   router.activate = hash => {
     if (hash === location.hash && hash in router.routes) {
       const route = router.routes[hash]
-      render(route.view, route.host)
-      if (router.active) router.active.view.remove()
-      router.active = route
+      domfn.mutate(route.host, {inner: route.view})
     }
   }
   router.del = hash => delete router.routes[hash]
