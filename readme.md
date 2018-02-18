@@ -41,7 +41,7 @@ const {dom, domfn: {mutate}} = rilti
       '--highlight-color': 'crimson',
       // ^_ css variables? uh-huh totally.
       cursor: 'not-allowed' // can't touch this! da na-na-na
-    }
+    },
     once: {
       destroy (e) {
         console.log('card is no more :(')
