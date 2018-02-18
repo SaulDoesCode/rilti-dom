@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>rilti-dom examples</title>
+    <script src="../rilti-dom.js"></script>
+<script>
+const {
+  dom: {a, p, nav, header, h1, main, div, html},
+  router
+} = rilti
+
+const navbar = header({
+  render: 'body',
+  class: 'navbar'
+},
+  h1('My Awesome Site!'),
+  nav(
+    a({href: '#home'}, 'home'),
+    a({href: '#about'}, 'about'),
+    a({href: '#contact'}, 'contact'),
+    a({
+      href: '#/https://github.com/SaulDoesCode',
+      attr: {target: '_blank'}
+    },
+      'my github'
+    )
+  )
+)
+
+const pageView = main({
+  class: 'page-view',
+  render: 'body'
+})
+
+router({
+  home: {
+    host: pageView,
+    view: div(
+      h1('Welcome to my Awsome site!'),
+      p(`You're reading the "home page" of sorts.`)
+    )
+  },
+// "#" is optional
+  '#about': {
+    host: pageView,
+//  ^- add the view to <main class="page-view"> when the route matches
+    view: [
+      () => 'arrays, primitives render nodes, elements, functions...',
+      p('All of ^- these rilti-dom will render with ease'),
+      html(`
+        No really,
+        <b>Anything goes!</b>
+      `)
+    ]
+  },
+  contact: {
+    host: pageView,
+    view: `
+      you can talk to me at saul@grimstack.io
+      or if you have any issues or concerns
+      put them up on github.com/SaulDoesCode.
+    `
+  }
+})
+
+if (!location.hash) location.hash = '#home'
+</script>
+  </head>
+</html>
