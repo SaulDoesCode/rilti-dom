@@ -3,12 +3,17 @@
   <head>
     <meta charset="utf-8">
     <title>rilti-dom examples</title>
-    <script src="../rilti-dom.js"></script>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="../rilti-dom.min.js"></script>
 <script>
 const {
-  dom: {a, p, nav, header, h1, main, div, html},
+  dom: {a, p, nav, header, h1, main, div, html, query},
   router
 } = rilti
+
+const links = ['home', 'about', 'contact'].map(
+  name => a({href: '#' + name}, name)
+)
 
 const navbar = header({
   render: 'body',
@@ -16,11 +21,9 @@ const navbar = header({
 },
   h1('My Awesome Site!'),
   nav(
-    a({href: '#home'}, 'home'),
-    a({href: '#about'}, 'about'),
-    a({href: '#contact'}, 'contact'),
+    ...links,
     a({
-      href: '#/https://github.com/SaulDoesCode',
+      href: 'https://github.com/SaulDoesCode',
       attr: {target: '_blank'}
     },
       'my github'
@@ -28,26 +31,34 @@ const navbar = header({
   )
 )
 
-const pageView = main({
+const active = (route, hash) => {
+  links.forEach(link => {
+    link.classList[link.href === hash ? 'add' : 'remove']('active')
+  })
+}
+
+const host = main({
   class: 'page-view',
   render: 'body'
 })
 
 router({
   home: {
-    host: pageView,
+    active,
+    host,
     view: div(
       h1('Welcome to my Awsome site!'),
       p(`You're reading the "home page" of sorts.`)
-    )
+    ),
   },
 // "#" is optional
   '#about': {
-    host: pageView,
+    active,
+    host,
 //  ^- add the view to <main class="page-view"> when the route matches
     view: [
       () => 'arrays, primitives render nodes, elements, functions...',
-      p('All of ^- these rilti-dom will render with ease'),
+      p('^- All of these rilti-dom will render with ease'),
       html(`
         No really,
         <b>Anything goes!</b>
@@ -55,12 +66,13 @@ router({
     ]
   },
   contact: {
-    host: pageView,
-    view: `
+    active,
+    host,
+    view: p(`
       you can talk to me at saul@grimstack.io
       or if you have any issues or concerns
       put them up on github.com/SaulDoesCode.
-    `
+    `.trim())
   }
 })
 
