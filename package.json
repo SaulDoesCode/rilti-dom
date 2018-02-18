@@ -1,0 +1,48 @@
+{
+  "name": "rilti-dom.js",
+  "version": "0.0.1",
+  "description": "it's basically html tags as functions but with superpowers!",
+  "main": "init.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sauldoescode/rilti-dom.git"
+  },
+  "keywords": [
+    "ES6",
+    "ES7",
+    "view",
+    "library",
+    "front-end",
+    "framework"
+  ],
+  "author": "Saul van der Walt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sauldoescode/rilti.js/issues"
+  },
+  "scripts": {
+    "standard": "standard"
+  },
+  "standard": {
+    "ignore": [
+      "./dist/",
+      "./docs/",
+      "./docs/*.js",
+      "./examples/",
+      "./examples/assets/",
+      "*.min.js",
+      "init.js",
+      "highlight.js"
+    ]
+  },
+  "homepage": "https://github.com/sauldoescode/rilti.js#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.3",
+    "babel-minify": "^0.2.0",
+    "babel-preset-minify": "^0.2.0",
+    "chokidar": "^2.0.2",
+    "standard": "^10.0.3"
+  }
+}
