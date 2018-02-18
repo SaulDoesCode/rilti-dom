@@ -33,8 +33,6 @@
   const isInput = o => o && (o instanceof HTMLInputElement || o instanceof HTMLTextAreaElement)
   const isRenderable = some(isNode, isArrlike, isPrimitive)
 
-  const err = console.error.bind(console)
-
   const extend = (host = {}, obj, safe = false, keys = Object.keys(obj)) => {
     keys.forEach(key => {
       if (!safe || (safe && !(key in host))) $define(host, key, $getDescriptor(obj, key))
@@ -127,7 +125,7 @@
   }
 
   const html = input => (
-    isFunc(input) ? html(input()) : isNode(input) ? input : doc.createRange().createContextualFragment(input)
+    isFunc(input) ? html(input()) : isNode(input) ? input : isArr(input) ? vpend(input) : doc.createRange().createContextualFragment(input)
   )
 
   const frag = input => (
@@ -254,7 +252,7 @@
   const Mounted = mutateSet(new WeakSet())
   /*
     // Thanks A. Sharif, for medium.com/javascript-inside/safely-accessing-deeply-nested-values-in-javascript-99bf72a0855a
-    const extract = (o, path) => isDef(o) && path
+    const extract = (o, path) => (isDef(o) && UNDEF) || path
     .replace(/\[(\w+)\]/g, '.$1')
     .replace(/^\./, '')
     .split('.')
@@ -296,13 +294,15 @@
           MNT(node)
         }
       },
-      errs => err('render fault: ', errs)
+      errs => console.error('render fault:', errs)
     )
     return node
   }
 
   const create = (tag, options, ...children) => {
-    const el = isNode(tag) ? tag : doc.createElement(tag)
+    const el = (
+      isNode(tag) ? tag : tag === 'svg' ? doc.createElementNS('http://www.w3.org/2000/svg', tag) : doc.createElement(tag)
+    )
 
     if (isRenderable(options)) children.unshift(options)
     if (children.length && el.nodeName !== '#text') {
@@ -390,6 +390,7 @@
   router.activate = hash => {
     if (hash === location.hash && hash in router.routes) {
       const route = router.routes[hash]
+      if (isFunc(route.active)) route.active(route, hash)
       domfn.mutate(route.host, {inner: route.view})
     }
   }
