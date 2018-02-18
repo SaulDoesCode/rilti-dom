@@ -1,7 +1,7 @@
 # 💫 rilti-dom 💫
 ## write your dom with functions  
 
-**it's (rilti.js)[https://github.com/SaulDoesCode/rilti.js] but only the dom parts**
+**it's [rilti.js](https://github.com/SaulDoesCode/rilti.js) but only the dom parts**
 
 rilti-dom weighs in at only ~2.5KB gzipped and ~5.1KB just minified.
 
